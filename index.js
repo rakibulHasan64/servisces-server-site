@@ -53,6 +53,24 @@ async function run() {
         
      });
     
+    // search
+    app.get('/all-services', async (req, res) => {
+     const filter = req.query.filter || '';  // Default to empty string if no  filter
+     const query = {
+        serviceName: {
+            $regex: filter,
+            $options: 'i',  // Case-insensitive search
+        },
+     };
+     try {
+        const result = await servicesCollection.find(query).toArray();
+        res.send(result);
+     } catch (error) {
+        res.status(500).send({ message: "Error fetching services", error });
+      }
+    });
+
+    
     // single page
 
     app.get('/services/:id', async (req, res) => {
@@ -86,18 +104,34 @@ async function run() {
 // আপডেট API
   app.put('/serviseed/:id', async (req, res) => {
     const id = req.params.id;
-    const updatedService = req.body;  // এখানে সার্ভিসের নতুন ডেটা body থেকে আসবে
+    const updatedService = req.body;  
 
     const filter = { _id: new ObjectId(id) };
     const options = { upsert: true };
 
     const updateDoc = {
-      $set: updatedService,  // সার্ভিসের নতুন ডেটা
+      $set: updatedService,  
     };
 
     const result = await servicesCollection.updateOne(filter, updateDoc, options);
     res.send(result);
   });
+    
+    // get based user
+  //  app.get("/services/:email", async (req, res) => {
+  //   const email = req.params.email; // query থেকে নয়, রাউট প্যারামিটার থেকে email নিতে হবে
+  //   const query = { "byer.userEmail": email }; // সঠিক query তৈরি
+  //   try {
+  //      const result = await servicesCollection.find(query).toArray();
+  //      res.send(result);
+  //    } catch (error) {
+  //       res.status(500).send({ message: "Error fetching services", error: error.message });
+  //   }
+  // });
+
+
+
+
 
 
 
