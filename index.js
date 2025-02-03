@@ -139,11 +139,31 @@ async function run() {
       res.send(result);
     })
 
-     app.get('/order', async (req, res) => {
-        const services = servicesorderCollection.find()
-        const result = await services.toArray();
-        res.send(result);
-     })
+    app.get('/order', async (req, res) => {
+      const services = servicesorderCollection.find()
+      const result = await services.toArray();
+      res.send(result);
+    });
+
+
+    app.delete('/orders/:id', async (req, res) => {
+      const id = req.params.id; 
+      console.log(id);
+      
+      const query = { _id: new ObjectId(id) }
+      const result = await servicesorderCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    //get requset on user
+    app.get("/request/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const result = await servicesorderCollection.find(query).toArray();
+      res.send(result);
+
+    })
+
 
 
 
