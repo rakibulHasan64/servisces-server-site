@@ -120,8 +120,8 @@ async function run() {
     
   //   // get based user
     app.get("/servicesss/:email", async (req, res) => {
-     const email = req.params.email; // query থেকে নয়, রাউট প্যারামিটার থেকে email নিতে হবে
-     const query = {'byer.userEmail': email} // সঠিক query তৈরি
+     const email = req.params.email; 
+     const query = {'byer.userEmail': email} 
   
       const result = await servicesCollection.find(query).toArray();
         res.send(result);
