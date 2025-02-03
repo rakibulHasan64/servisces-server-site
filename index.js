@@ -33,7 +33,8 @@ async function run() {
      await client.connect();
 
      const database = client.db("servicesDB");
-      const servicesCollection = database.collection("services");
+    const servicesCollection = database.collection("services");
+    const servicesorderCollection = database.collection("order");
      
 
      //start db
@@ -117,21 +118,32 @@ async function run() {
     res.send(result);
   });
     
-    // get based user
-  //  app.get("/services/:email", async (req, res) => {
-  //   const email = req.params.email; // query থেকে নয়, রাউট প্যারামিটার থেকে email নিতে হবে
-  //   const query = { "byer.userEmail": email }; // সঠিক query তৈরি
-  //   try {
-  //      const result = await servicesCollection.find(query).toArray();
-  //      res.send(result);
-  //    } catch (error) {
-  //       res.status(500).send({ message: "Error fetching services", error: error.message });
-  //   }
-  // });
+  //   // get based user
+    app.get("/servicesss/:email", async (req, res) => {
+     const email = req.params.email; // query থেকে নয়, রাউট প্যারামিটার থেকে email নিতে হবে
+     const query = {'byer.userEmail': email} // সঠিক query তৈরি
+  
+      const result = await servicesCollection.find(query).toArray();
+        res.send(result);
+    
+    
+   });
 
 
 
+    // order
 
+    app.post('/order', async (req, res) => {
+      const job = req.body;
+      const result = await servicesorderCollection.insertOne(job);
+      res.send(result);
+    })
+
+     app.get('/order', async (req, res) => {
+        const services = servicesorderCollection.find()
+        const result = await services.toArray();
+        res.send(result);
+     })
 
 
 
